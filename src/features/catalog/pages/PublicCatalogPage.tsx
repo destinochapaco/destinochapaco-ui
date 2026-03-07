@@ -7,6 +7,8 @@ import { PublicCatalogFilters } from "../components/PublicCatalogFilters";
 import { PackageCard } from "../components/PackageCard";
 import type { PublicPackage } from "../types";
 
+import { PublicPackageDetailsModal } from "../components/PublicPackageDetailsModal";
+
 const EMPRESA_ID = import.meta.env.VITE_EMPRESA_ID;
 
 export const PublicCatalogPage = () => {
@@ -44,7 +46,6 @@ export const PublicCatalogPage = () => {
             <p className="text-base-content/60">No pudimos cargar el catálogo. Por favor, intenta recargar la página.</p>
         </div>
     );
-    
     return (
         <div className="min-h-screen bg-base-50 pb-20">
             {/* Header decorativo */}
@@ -90,7 +91,12 @@ export const PublicCatalogPage = () => {
                 )}
             </main>
 
-            {/* Aquí a futuro irá el <PackagePublicDetailsModal isOpen={!!selectedPackage} pkg={selectedPackage} /> */}
+            {/* MODAL DE DETALLES */}
+            <PublicPackageDetailsModal 
+                isOpen={!!selectedPackage} 
+                onClose={() => setSelectedPackage(null)} 
+                pkg={selectedPackage} 
+            />
         </div>
     );
 };
