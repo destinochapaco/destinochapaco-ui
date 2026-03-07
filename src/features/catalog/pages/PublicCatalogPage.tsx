@@ -19,17 +19,36 @@ export const PublicCatalogPage = () => {
     });
 
     // 2. Estados
-    const [categoryFilter, setCategoryFilter] = useState("ALL");
+    // Ahora es un array vacío por defecto (significa "mostrar todo")
+    const [activeFilters, setActiveFilters] = useState<string[]>([]);
     const [selectedPackage, setSelectedPackage] = useState<PublicPackage | null>(null);
 
-    // 3. Lógica de Filtrado
+    // 3. Lógica de Filtrado EXACTO
     const filteredPackages = useMemo(() => {
-        if (categoryFilter === "ALL") return packages;
+        // Si no hay filtros seleccionados, mostramos todo el catálogo
+        if (activeFilters.length === 0) return packages;
+        
         return packages.filter(pkg => {
-            const codes = Array.from(new Set(pkg.details.map(d => d.categoryTypeCode))).sort().join("-");
-            return codes === categoryFilter;
+            // Extraemos los códigos de categoría únicos de este paquete
+            const pkgCategoryCodes = Array.from(new Set(pkg.details.map(d => String(d.categoryTypeCode))));
+            
+            // REGLA 1: Deben tener exactamente la misma cantidad de categorías.
+            // Si buscas "Solo Inscripción" (1), y el paquete tiene "Inscripción + Bus" (2), lo descarta.
+            if (pkgCategoryCodes.length !== activeFilters.length) return false;
+
+            // REGLA 2: Todas las categorías seleccionadas deben estar en el paquete.
+            return activeFilters.every(filterCode => pkgCategoryCodes.includes(filterCode));
         });
-    }, [packages, categoryFilter]);
+    }, [packages, activeFilters]);
+
+    // Función para encender/apagar un filtro
+    const handleToggleFilter = (code: string) => {
+        setActiveFilters(prev => 
+            prev.includes(code) 
+                ? prev.filter(c => c !== code) // Si ya estaba, lo quitamos
+                : [...prev, code] // Si no estaba, lo agregamos
+        );
+    };
 
     // Render de Estados de Carga / Error
     if (isLoading) return (
@@ -46,6 +65,7 @@ export const PublicCatalogPage = () => {
             <p className="text-base-content/60">No pudimos cargar el catálogo. Por favor, intenta recargar la página.</p>
         </div>
     );
+    
     return (
         <div className="min-h-screen bg-slate-100 pb-20">
             {/* Header decorativo */}
@@ -61,11 +81,11 @@ export const PublicCatalogPage = () => {
 
             <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 -mt-12 relative z-20">
                 {/* Contenedor de Filtros */}
-                <div className="bg-base-100 rounded-3xl p-4 md:p-6 shadow-md mb-8">
+                <div className="bg-transparent mb-8">
                     <PublicCatalogFilters 
                         packages={packages} 
-                        activeFilter={categoryFilter}
-                        onFilterChange={setCategoryFilter}
+                        activeFilters={activeFilters}
+                        onFilterToggle={handleToggleFilter}
                     />
                 </div>
 

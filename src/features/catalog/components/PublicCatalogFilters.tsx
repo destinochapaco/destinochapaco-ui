@@ -1,81 +1,77 @@
 // src/features/catalog/components/PublicCatalogFilters.tsx
 import { useMemo } from "react";
-import { Bed, Bus, Ticket, Layers, Briefcase } from "lucide-react";
+import { Bed, Bus, Ticket, Briefcase } from "lucide-react";
 import type { PublicPackage } from "../types";
 
 interface Props {
     packages: PublicPackage[];
-    activeFilter: string;
-    onFilterChange: (filterId: string) => void;
+    activeFilters: string[];
+    onFilterToggle: (categoryId: string) => void;
 }
 
-// Mapa de colores e iconos según el código de categoría
-const CATEGORY_MAP: Record<number, { label: string; icon: any; color: string }> = {
-    601: { label: "Congreso", icon: Ticket, color: "text-blue-500" }, 
-    602: { label: "Hospedaje", icon: Bed, color: "text-pink-500" }, 
-    603: { label: "Bus", icon: Bus, color: "text-green-500" },
+// Mapa de estilos con colores específicos para estado Activo e Inactivo
+const CATEGORY_MAP: Record<number, { label: string; icon: any; activeClass: string; inactiveClass: string }> = {
+    601: { 
+        label: "Inscripción", 
+        icon: Ticket, 
+        activeClass: "bg-blue-500 border-blue-500 text-white shadow-blue-500/30 scale-105",
+        inactiveClass: "bg-blue-50 border-blue-200 text-blue-400 hover:bg-blue-100 hover:border-blue-300"
+    }, 
+    602: { 
+        label: "Hospedaje", 
+        icon: Bed, 
+        activeClass: "bg-rose-500 border-rose-500 text-white shadow-rose-500/30 scale-105",
+        inactiveClass: "bg-rose-50 border-rose-200 text-rose-400 hover:bg-rose-100 hover:border-rose-300"
+    }, 
+    603: { 
+        label: "Transporte", 
+        icon: Bus, 
+        activeClass: "bg-emerald-500 border-emerald-500 text-white shadow-emerald-500/30 scale-105",
+        inactiveClass: "bg-emerald-50 border-emerald-200 text-emerald-400 hover:bg-emerald-100 hover:border-emerald-300"
+    },
 };
 
-export const PublicCatalogFilters = ({ packages, activeFilter, onFilterChange }: Props) => {
-    const filters = useMemo(() => {
-        const uniqueCombinations = new Map<string, { categories: any[]; count: number }>();
-        
-        uniqueCombinations.set("ALL", { 
-            categories: [{ label: "Todos los Paquetes", icon: Layers, color: "text-primary" }], 
-            count: packages.length 
-        });
+const DEFAULT_CATEGORY_STYLE = { 
+    label: "Extra", 
+    icon: Briefcase, 
+    activeClass: "bg-slate-500 border-slate-500 text-white shadow-slate-500/30 scale-105",
+    inactiveClass: "bg-slate-50 border-slate-200 text-slate-400 hover:bg-slate-100 hover:border-slate-300"
+};
+
+export const PublicCatalogFilters = ({ packages, activeFilters, onFilterToggle }: Props) => {
+    
+    const availableCategories = useMemo(() => {
+        const uniqueCodes = new Set<string>();
 
         packages.forEach(pkg => {
-            const codes = Array.from(new Set(pkg.details.map(d => d.categoryTypeCode))).sort();
-            const comboId = codes.join("-");
-            
-            if (!uniqueCombinations.has(comboId)) {
-                const categoriesList = codes.map(c => ({
-                    label: CATEGORY_MAP[c]?.label || "Extra",
-                    icon: CATEGORY_MAP[c]?.icon || Briefcase,
-                    color: CATEGORY_MAP[c]?.color || "text-slate-400"
-                }));
-                uniqueCombinations.set(comboId, { categories: categoriesList, count: 0 });
-            }
-            uniqueCombinations.get(comboId)!.count++;
+            pkg.details.forEach(d => uniqueCodes.add(String(d.categoryTypeCode)));
         });
 
-        return Array.from(uniqueCombinations.entries()).map(([id, data]) => ({ id, ...data }));
+        return Array.from(uniqueCodes).map(code => ({
+            code,
+            info: CATEGORY_MAP[Number(code)] || DEFAULT_CATEGORY_STYLE
+        })).sort((a, b) => Number(a.code) - Number(b.code));
+        
     }, [packages]);
 
     return (
-        <div className="flex flex-nowrap overflow-x-auto gap-3 pb-4 scrollbar-hide snap-x px-4 md:px-0">
-            {filters.map((filter) => {
-                const isActive = activeFilter === filter.id;
+        <div className="flex flex-wrap gap-3 pb-2 justify-center px-4 md:px-0">
+            {availableCategories.map((cat) => {
+                const isActive = activeFilters.includes(cat.code);
+                const Icon = cat.info.icon;
+                
                 return (
                     <button
-                        key={filter.id}
-                        onClick={() => onFilterChange(filter.id)}
+                        key={cat.code}
+                        onClick={() => onFilterToggle(cat.code)}
                         className={`
-                            flex items-center gap-2 px-5 py-3 rounded-2xl border-2 transition-all duration-300 whitespace-nowrap snap-start shrink-0
-                            ${isActive 
-                                ? "bg-primary border-primary text-primary-content shadow-lg scale-105" 
-                                : "bg-base-100 border-base-200 text-base-content hover:border-primary/50"
-                            }
+                            flex items-center gap-2 px-5 py-3 rounded-2xl border-2 transition-all duration-300 shadow-sm
+                            ${isActive ? cat.info.activeClass : cat.info.inactiveClass}
                         `}
                     >
-                        <div className="flex items-center gap-2">
-                            {filter.categories.map((cat, index) => {
-                                const Icon = cat.icon;
-                                return (
-                                    <div key={index} className="flex items-center gap-1">
-                                        <Icon className={`w-5 h-5 ${isActive ? 'text-white' : cat.color}`} strokeWidth={2.5} />
-                                        {/* Solo mostramos el texto si es el único icono, o si es la vista de "Todos" para ahorrar espacio */}
-                                        {(filter.categories.length === 1 || filter.id === "ALL") && (
-                                            <span className="font-bold text-sm">{cat.label}</span>
-                                        )}
-                                    </div>
-                                );
-                            })}
-                        </div>
-                        <span className={`text-xs font-bold ml-1 px-2 py-0.5 rounded-full ${isActive ? 'bg-white/20' : 'bg-base-200'}`}>
-                            {filter.count}
-                        </span>
+                        {/* El icono hereda el color del texto automáticamente gracias al diseño de Lucide */}
+                        <Icon className="w-5 h-5" strokeWidth={2.5} />
+                        <span className="font-bold text-sm">{cat.info.label}</span>
                     </button>
                 );
             })}
