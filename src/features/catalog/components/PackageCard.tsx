@@ -76,7 +76,7 @@ export const PackageCard = ({ pkg, onViewDetails }: Props) => {
                                 key={idx} 
                                 className={`text-[10px] uppercase font-bold px-2 py-1 rounded-md shadow-sm border-none ${getCategoryStyle(cat.code)}`}
                             >
-                                + {cat.name}
+                                {cat.name}
                             </span>
                         ))}
                     </div>
