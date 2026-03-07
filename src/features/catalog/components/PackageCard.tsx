@@ -116,7 +116,7 @@ export const PackageCard = ({ pkg, onViewDetails }: Props) => {
                     {/* Botón de Acción */}
                     <button 
                         onClick={() => onViewDetails(pkg)}
-                        className="mt-4 w-full btn btn-primary rounded-xl font-bold shadow-md shadow-primary/30"
+                        className="mt-4 w-full btn bg-[#ffc604] hover:bg-[#eab003] text-black border-none rounded-xl font-black shadow-md shadow-[#ffc604]/40 transition-colors"
                     >
                         <Info size={18} /> Ver detalles del paquete
                     </button>
