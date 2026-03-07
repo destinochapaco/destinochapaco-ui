@@ -10,7 +10,7 @@ interface Props {
 export const PublicPackageDetailsModal = ({ isOpen, onClose, pkg }: Props) => {
     if (!isOpen || !pkg) return null;
 
-    const whatsappMessage = encodeURIComponent(`¡Hola! Estoy interesado en el paquete "${pkg.name}". ¿Me podrían dar más información?`);
+    // const whatsappMessage = encodeURIComponent(`¡Hola! Estoy interesado en el paquete "${pkg.name}". ¿Me podrían dar más información?`);
     // const whatsappLink = `https://wa.me/591XXXXXXXX?text=${whatsappMessage}`;
 
     // Función para obtener el color del badge según el código de la categoría
@@ -27,19 +27,19 @@ export const PublicPackageDetailsModal = ({ isOpen, onClose, pkg }: Props) => {
     return (
         <div className={`modal modal-bottom sm:modal-middle ${isOpen ? "modal-open" : ""}`}>
             {/* MODAL BOX: Ahora es flex-col y tiene un alto máximo estricto para que nunca se desborde */}
-            <div 
+            <div
                 className="modal-box p-0 sm:max-w-2xl w-full max-h-[95vh] sm:max-h-[90vh] overflow-hidden rounded-t-3xl sm:rounded-3xl relative flex flex-col"
                 style={{
-                    backgroundImage: "url('/card-background.png')", 
+                    backgroundImage: "url('/card-background.png')",
                     backgroundSize: 'cover',
                     backgroundPosition: 'center'
                 }}
             >
                 {/* VELO OSCURO Y DESENFOQUE */}
                 <div className="absolute inset-0 bg-black/60 backdrop-blur-md pointer-events-none z-0"></div>
-                
+
                 {/* Botón flotante para cerrar */}
-                <button 
+                <button
                     onClick={onClose}
                     className="btn btn-sm btn-circle btn-ghost absolute right-4 top-4 z-20 bg-black/40 text-white hover:bg-black/60 backdrop-blur-sm border-none"
                 >
@@ -49,14 +49,14 @@ export const PublicPackageDetailsModal = ({ isOpen, onClose, pkg }: Props) => {
                 {/* CABECERA (Fija, no se encoge: shrink-0) */}
                 <div className="h-48 sm:h-56 w-full bg-base-200 relative z-10 shrink-0">
                     {pkg.imageUrl && (
-                        <img 
-                            src={pkg.imageUrl} 
-                            alt={pkg.name} 
+                        <img
+                            src={pkg.imageUrl}
+                            alt={pkg.name}
                             className="w-full h-full object-cover"
                         />
                     )}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
-                    
+
                     <div className="absolute bottom-4 left-6 right-6">
                         <div className="flex gap-2 mb-2">
                             {pkg.isLowStock && (
@@ -71,7 +71,7 @@ export const PublicPackageDetailsModal = ({ isOpen, onClose, pkg }: Props) => {
 
                 {/* CUERPO DEL MODAL (flex-1 para rellenar espacio, min-h-0 y overflow-y-auto para scrollear) */}
                 <div className="p-4 sm:p-6 flex-1 min-h-0 overflow-y-auto space-y-6 sm:space-y-8 relative z-10">
-                    
+
                     {/* Descripción General */}
                     <section>
                         <h3 className="text-lg font-bold text-white mb-2 flex items-center gap-2 drop-shadow-sm">
@@ -92,7 +92,7 @@ export const PublicPackageDetailsModal = ({ isOpen, onClose, pkg }: Props) => {
                         <div className="space-y-4 sm:space-y-5">
                             {pkg.details.map((detail, idx) => (
                                 <div key={idx} className="bg-transparent backdrop-blur-sm hover:bg-white/5 transition-all duration-300 rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row gap-4 sm:gap-5 border border-white/30">
-                                    
+
                                     {/* IMAGEN DEL DETALLE */}
                                     {detail.imageUrl ? (
                                         <div className="w-24 sm:w-32 aspect-[4/5] rounded-xl overflow-hidden shrink-0 border border-white/20 mx-auto sm:mx-0">
@@ -103,7 +103,7 @@ export const PublicPackageDetailsModal = ({ isOpen, onClose, pkg }: Props) => {
                                             <CheckCircle2 size={32} className="text-white/50" />
                                         </div>
                                     )}
-                                    
+
                                     <div className="flex-grow py-1 text-center sm:text-left">
                                         <div className="flex flex-col sm:flex-row justify-between items-center sm:items-start gap-2">
                                             <div className="flex flex-col items-center sm:items-start gap-1">
@@ -114,14 +114,14 @@ export const PublicPackageDetailsModal = ({ isOpen, onClose, pkg }: Props) => {
                                                     {detail.productName}
                                                 </h4>
                                             </div>
-                                            
+
                                             {detail.quantity > 1 && (
                                                 <span className="bg-[#ffc604] text-black font-black text-xs px-2.5 py-1 rounded-lg shadow-sm whitespace-nowrap shrink-0">
                                                     x{detail.quantity}
                                                 </span>
                                             )}
                                         </div>
-                                        
+
                                         <p className="text-xs sm:text-sm text-gray-300 mt-2 line-clamp-3 drop-shadow-sm">
                                             {detail.productDescription}
                                         </p>
@@ -135,9 +135,9 @@ export const PublicPackageDetailsModal = ({ isOpen, onClose, pkg }: Props) => {
                                                     </span>
                                                     <span className="opacity-90 block mt-0.5 drop-shadow-sm">{detail.addressLocation}</span>
                                                     {detail.mapUrlLocation && (
-                                                        <a 
-                                                            href={detail.mapUrlLocation} 
-                                                            target="_blank" 
+                                                        <a
+                                                            href={detail.mapUrlLocation}
+                                                            target="_blank"
                                                             rel="noopener noreferrer"
                                                             className="text-info hover:text-info/80 mt-1.5 font-bold transition-colors inline-flex items-center gap-1 drop-shadow-sm justify-center sm:justify-start w-full sm:w-auto"
                                                         >
@@ -157,10 +157,10 @@ export const PublicPackageDetailsModal = ({ isOpen, onClose, pkg }: Props) => {
                 {/* FOOTER STICKY (Fijo, no se encoge: shrink-0) */}
                 {/* FOOTER STICKY (Fijo, sin botón, precios centrados) */}
                 <div className="bg-[#170822] border-t border-purple-900/50 p-4 sm:p-6 flex justify-center items-center relative z-10 shrink-0 rounded-b-3xl shadow-[0_-10px_30px_rgba(0,0,0,0.3)]">
-                    
+
                     {/* Zona de Precios Centrada */}
                     <div className="flex items-center justify-center w-full max-w-lg gap-4 sm:gap-12">
-                        
+
                         {/* PRECIO POR PERSONA */}
                         <div className="flex-1 flex flex-col items-center text-center">
                             <p className="text-[10px] sm:text-xs font-bold text-purple-200/60 uppercase tracking-wider mb-0.5 sm:mb-1">
@@ -189,7 +189,7 @@ export const PublicPackageDetailsModal = ({ isOpen, onClose, pkg }: Props) => {
                         </div>
                     </div>
                     {/* Botón de Acción */}
-                    {/* <a 
+                    {/* <a
                         href={whatsappLink}
                         target="_blank"
                         rel="noopener noreferrer"
@@ -200,7 +200,7 @@ export const PublicPackageDetailsModal = ({ isOpen, onClose, pkg }: Props) => {
                     </a> */}
                 </div>
             </div>
-            
+
             <form method="dialog" className="modal-backdrop bg-black/60 backdrop-blur-sm" onClick={onClose}>
                 <button>close</button>
             </form>
