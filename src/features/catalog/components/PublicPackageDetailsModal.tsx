@@ -102,57 +102,63 @@ export const PublicPackageDetailsModal = ({ isOpen, onClose, pkg }: Props) => {
                         </h3>
                         <div className="space-y-4 sm:space-y-5">
                             {pkg.details.map((detail, idx) => (
-                                <div key={idx} className="bg-transparent backdrop-blur-sm hover:bg-white/5 transition-all duration-300 rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row gap-4 sm:gap-5 border border-white/30">
-
-                                    {/* IMAGEN DEL DETALLE */}
+                                /* MINI CARDS: Siempre en fila (flex-row), reduciendo paddings en móvil para ahorrar espacio */
+                                <div key={idx} className="bg-transparent backdrop-blur-sm hover:bg-white/5 transition-all duration-300 rounded-2xl p-3 sm:p-5 flex flex-row items-start gap-3 sm:gap-5 border border-white/30">
+                                    
+                                    {/* IMAGEN DEL DETALLE: Más pequeña en móvil (w-20) y normal en PC (w-28) */}
                                     {detail.imageUrl ? (
-                                        <div className="w-24 sm:w-32 aspect-[4/5] rounded-xl overflow-hidden shrink-0 border border-white/20 mx-auto sm:mx-0">
+                                        <div className="w-20 sm:w-28 aspect-[4/5] rounded-xl overflow-hidden shrink-0 border border-white/20">
                                             <img src={detail.imageUrl} alt={detail.productName} className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
                                         </div>
                                     ) : (
-                                        <div className="w-24 sm:w-32 aspect-[4/5] rounded-xl bg-white/10 flex items-center justify-center shrink-0 border border-white/20 mx-auto sm:mx-0">
-                                            <CheckCircle2 size={32} className="text-white/50" />
+                                        <div className="w-20 sm:w-28 aspect-[4/5] rounded-xl bg-white/10 flex items-center justify-center shrink-0 border border-white/20">
+                                            <CheckCircle2 size={24} className="text-white/50" />
                                         </div>
                                     )}
-
-                                    <div className="flex-grow py-1 text-center sm:text-left">
-                                        <div className="flex flex-col sm:flex-row justify-between items-center sm:items-start gap-2">
-                                            <div className="flex flex-col items-center sm:items-start gap-1">
-                                                <span className={`text-[10px] uppercase font-bold px-2 py-1 rounded-md shadow-sm border-none ${getCategoryStyle(detail.categoryTypeCode)}`}>
+                                    
+                                    {/* CONTENEDOR DE TEXTOS: min-w-0 es crucial para que los textos largos no rompan el diseño horizontal en celulares */}
+                                    <div className="flex-grow py-0.5 text-left flex flex-col min-w-0">
+                                        <div className="flex justify-between items-start gap-2">
+                                            <div className="flex flex-col items-start gap-1 min-w-0">
+                                                {/* BADGE DE CATEGORÍA */}
+                                                <span className={`text-[9px] sm:text-[10px] uppercase font-bold px-2 py-1 rounded-md shadow-sm border-none ${getCategoryStyle(detail.categoryTypeCode)}`}>
                                                     {detail.categoryTypeName}
                                                 </span>
-                                                <h4 className="font-bold text-base sm:text-lg text-white leading-tight mt-0.5 drop-shadow-md">
+                                                
+                                                {/* TÍTULO: Usamos la función formatTitle y limitamos a 2 líneas si es muy largo */}
+                                                <h4 className="font-bold text-sm sm:text-lg text-white leading-tight mt-0.5 drop-shadow-md line-clamp-2">
                                                     {formatTitle(detail.productName)}
                                                 </h4>
                                             </div>
-
+                                            
+                                            {/* BADGE DE CANTIDAD */}
                                             {detail.quantity > 1 && (
-                                                <span className="bg-[#ffc604] text-black font-black text-xs px-2.5 py-1 rounded-lg shadow-sm whitespace-nowrap shrink-0">
+                                                <span className="bg-[#ffc604] text-black font-black text-[10px] sm:text-xs px-2 py-1 rounded-lg shadow-sm whitespace-nowrap shrink-0">
                                                     x{detail.quantity}
                                                 </span>
                                             )}
                                         </div>
-
-                                        <p className="text-xs sm:text-sm text-gray-300 mt-2 line-clamp-3 drop-shadow-sm">
+                                        
+                                        {/* TEXTO DESCRIPTIVO: Limitado a 2 líneas en móvil para no hacer la tarjeta gigante */}
+                                        <p className="text-xs sm:text-sm text-gray-300 mt-1.5 line-clamp-2 sm:line-clamp-3 drop-shadow-sm">
                                             {detail.productDescription}
                                         </p>
 
+                                        {/* UBICACIÓN: Diseño ultra compacto para móvil */}
                                         {detail.nameLocation && (
-                                            <div className="mt-4 flex flex-col sm:flex-row items-center sm:items-start gap-2 text-xs text-gray-300 bg-white/5 border border-white/20 p-3 rounded-xl text-left">
-                                                <MapPin size={16} className="text-error shrink-0 mt-0.5 drop-shadow-sm hidden sm:block" />
-                                                <div className="w-full text-center sm:text-left">
-                                                    <span className="font-bold text-white text-[13px] drop-shadow-sm flex justify-center sm:justify-start items-center gap-1">
-                                                        <MapPin size={14} className="text-error sm:hidden" /> {detail.nameLocation}
-                                                    </span>
-                                                    <span className="opacity-90 block mt-0.5 drop-shadow-sm">{detail.addressLocation}</span>
+                                            <div className="mt-2.5 flex items-start gap-1.5 text-[10px] sm:text-xs text-gray-300 bg-white/5 border border-white/20 p-2 sm:p-3 rounded-xl">
+                                                <MapPin size={14} className="text-error shrink-0 mt-0.5 drop-shadow-sm" />
+                                                <div className="min-w-0 flex-1">
+                                                    <span className="font-bold block text-white drop-shadow-sm truncate">{detail.nameLocation}</span>
+                                                    <span className="opacity-90 block mt-0.5 drop-shadow-sm truncate">{detail.addressLocation}</span>
                                                     {detail.mapUrlLocation && (
-                                                        <a
-                                                            href={detail.mapUrlLocation}
-                                                            target="_blank"
+                                                        <a 
+                                                            href={detail.mapUrlLocation} 
+                                                            target="_blank" 
                                                             rel="noopener noreferrer"
-                                                            className="text-info hover:text-info/80 mt-1.5 font-bold transition-colors inline-flex items-center gap-1 drop-shadow-sm justify-center sm:justify-start w-full sm:w-auto"
+                                                            className="text-info hover:text-info/80 mt-1 font-bold transition-colors inline-flex items-center gap-1 drop-shadow-sm"
                                                         >
-                                                            Ver en mapa &rarr;
+                                                            Ver mapa &rarr;
                                                         </a>
                                                     )}
                                                 </div>
