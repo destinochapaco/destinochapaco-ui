@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Map, AlertCircle, Loader2, SearchX } from "lucide-react";
+import { AlertCircle, Loader2, SearchX } from "lucide-react";
 
 import { getPublicCatalog } from "../services/catalogService";
 import { PublicCatalogFilters } from "../components/PublicCatalogFilters";
@@ -68,14 +68,58 @@ export const PublicCatalogPage = () => {
     
     return (
         <div className="min-h-screen bg-slate-100 pb-20">
-            {/* Header decorativo */}
-            <header className="bg-primary text-primary-content pt-12 pb-24 px-4 text-center rounded-b-[3rem] shadow-sm relative overflow-hidden">
-                <div className="absolute top-[-50px] right-[-50px] opacity-10">
-                    <Map size={200} />
+            {/* HEADER */}
+            <header className="relative w-full min-h-[280px] sm:min-h-[360px] flex flex-col px-4 sm:px-8 py-6 sm:py-8 overflow-hidden shadow-xl rounded-b-[2rem] sm:rounded-b-[3.5rem] mb-8">
+                
+                {/* 1. IMAGEN DE FONDO */}
+                <div 
+                    className="absolute inset-0 z-0"
+                    style={{
+                        backgroundImage: "url('/background-header.webp')",
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center'
+                    }}
+                ></div>
+                
+                {/* 2. OVERLAY OSCURO Y DESENFOQUE */}
+                <div className="absolute inset-0 bg-black/65 backdrop-blur-[3px] z-10"></div>
+
+                {/* 3. LOGOS (Parte Superior) */}
+                <div className="relative z-20 w-full max-w-7xl mx-auto flex items-start justify-between">
+                    
+                    {/* Logo Izquierda: Destino Chapaco */}
+                    <div className="flex-shrink-0">
+                        <img 
+                            src="/destino-chapaco-logo.png" 
+                            alt="Destino Chapaco" 
+                            className="h-12 sm:h-20 w-auto object-contain drop-shadow-lg hover:scale-105 transition-transform duration-300"
+                        />
+                    </div>
+
+                    {/* Logo Derecha: Congreso (.jpg con marco elegante) */}
+                    <div className="flex-shrink-0 rounded-xl overflow-hidden shadow-lg border border-white/20 hover:scale-105 transition-transform duration-300">
+                        <img 
+                            src="/congreso-logo.jpg" 
+                            alt="Congreso Universitario" 
+                            className="h-10 sm:h-16 w-auto object-contain rounded-lg" 
+                        />
+                    </div>
+
                 </div>
-                <div className="relative z-10 max-w-2xl mx-auto">
-                    <h1 className="text-3xl md:text-5xl font-black mb-4">Descubre tu próximo destino</h1>
-                    <p className="opacity-90 md:text-lg">Explora nuestras opciones y elige el paquete perfecto para ti.</p>
+
+                {/* 4. TEXTOS (Centro/Abajo) */}
+                <div className="relative z-20 w-full flex-1 flex flex-col items-center justify-center text-center mt-4 sm:mt-0">
+                    
+                    {/* TÍTULO PRINCIPAL */}
+                    <h1 className="text-3xl sm:text-5xl md:text-6xl font-black text-white tracking-tight drop-shadow-md mb-3 sm:mb-4">
+                        CONGRESO ACADÉMICO 2026
+                    </h1>
+                    
+                    {/* SUBTÍTULO / MISIÓN */}
+                    <p className="text-sm sm:text-lg md:text-xl text-gray-200 font-medium max-w-2xl drop-shadow-sm px-2 leading-relaxed">
+                        Organizamos tu viaje perfecto. Descubre Tarija, conecta con profesionales y vive una experiencia inolvidable sin preocupaciones.
+                    </p>
+                    
                 </div>
             </header>
 
