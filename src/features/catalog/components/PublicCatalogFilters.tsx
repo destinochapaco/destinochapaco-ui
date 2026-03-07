@@ -70,8 +70,7 @@ export const PublicCatalogFilters = ({ packages, activeFilters, onFilterToggle }
                         onClick={() => onFilterToggle(cat.code)}
                         className={`
                             flex items-center gap-2 border-2 transition-all duration-300 shadow-sm
-                            shrink-0 snap-start /* shrink-0 evita que se aplasten en celular */
-                            /* TAMAÑOS: Normal en móvil, Grande en PC */
+                            shrink-0 snap-start
                             px-4 py-2.5 rounded-xl md:px-8 md:py-4 md:rounded-2xl
                             ${isActive ? cat.info.activeClass : cat.info.inactiveClass}
                         `}

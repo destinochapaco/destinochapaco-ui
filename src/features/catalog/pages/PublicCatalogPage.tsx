@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Map, AlertCircle, Loader2 } from "lucide-react";
+import { Map, AlertCircle, Loader2, SearchX } from "lucide-react";
 
 import { getPublicCatalog } from "../services/catalogService";
 import { PublicCatalogFilters } from "../components/PublicCatalogFilters";
@@ -89,25 +89,42 @@ export const PublicCatalogPage = () => {
                     />
                 </div>
 
-                {/* Grid de Paquetes */}
+                {/* Grid de Paquetes o Mensaje de Vacío */}
                 {filteredPackages.length === 0 ? (
-                    <div className="text-center py-20">
-                        <p className="text-xl font-bold text-base-content/40">No hay paquetes disponibles en esta categoría.</p>
+                    
+                    /* DISEÑO DE ESTADO VACÍO (Empty State) */
+                    <div className="flex flex-col items-center justify-center py-16 px-4 text-center bg-white rounded-3xl shadow-sm border border-slate-200 w-full max-w-2xl mx-auto mt-8">
+                        <div className="bg-slate-50 p-5 rounded-full mb-5 border border-slate-100">
+                            <SearchX size={48} className="text-slate-400" strokeWidth={1.5} />
+                        </div>
+                        <h3 className="text-xl md:text-2xl font-black text-slate-800 mb-2">
+                            Aún no hay paquetes habilitados
+                        </h3>
+                        <p className="text-slate-500 mb-6 max-w-md text-sm md:text-base">
+                            No encontramos opciones con esta combinación exacta de servicios. Intenta desactivar algún filtro para ver más opciones disponibles.
+                        </p>
+                        <button 
+                            onClick={() => setActiveFilters([])} 
+                            className="btn bg-[#ffc604] hover:bg-[#eab003] text-black border-none rounded-xl font-black shadow-md shadow-[#ffc604]/30 px-8 sm:px-10 h-12 mt-2"
+                        >
+                            Mostrar todos los paquetes
+                        </button>
                     </div>
+
                 ) : (
+                    /* CONTENEDOR FLEX DE LAS TARJETAS */
                     <div className="flex flex-wrap justify-center gap-6 md:gap-8">
                         {filteredPackages.map((pkg) => (
                             <PackageCard 
-                                key={pkg.slug} // Usamos slug o id
+                                key={pkg.slug} 
                                 pkg={pkg} 
                                 onViewDetails={(pkg) => {
-                                    // Aquí luego abriremos el modal de detalles
-                                    console.log("Abrir detalles de:", pkg.name);
                                     setSelectedPackage(pkg); 
                                 }} 
                             />
                         ))}
                     </div>
+
                 )}
             </main>
 
