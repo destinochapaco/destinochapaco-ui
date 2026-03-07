@@ -75,7 +75,7 @@ export const PublicCatalogPage = () => {
                         <p className="text-xl font-bold text-base-content/40">No hay paquetes disponibles en esta categoría.</p>
                     </div>
                 ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div className="flex flex-wrap justify-center gap-6 md:gap-8">
                         {filteredPackages.map((pkg) => (
                             <PackageCard 
                                 key={pkg.slug} // Usamos slug o id
