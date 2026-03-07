@@ -24,6 +24,17 @@ export const PublicPackageDetailsModal = ({ isOpen, onClose, pkg }: Props) => {
         }
     };
 
+    // Función para limpiar el título eliminando lo que está antes del "|"
+    const formatTitle = (title: string) => {
+        if (!title) return "";
+        // Si el título contiene el símbolo "|", lo partimos en dos y nos quedamos con la segunda parte [1]
+        if (title.includes("|")) {
+            return title.split("|")[1].trim(); 
+        }
+        // Si no tiene el símbolo, devolvemos el título original tal cual
+        return title.trim();
+    };
+
     return (
         <div className={`modal modal-bottom sm:modal-middle ${isOpen ? "modal-open" : ""}`}>
             {/* MODAL BOX: Ahora es flex-col y tiene un alto máximo estricto para que nunca se desborde */}
@@ -64,7 +75,7 @@ export const PublicPackageDetailsModal = ({ isOpen, onClose, pkg }: Props) => {
                             )}
                         </div>
                         <h2 className="text-xl sm:text-3xl font-black text-white leading-tight drop-shadow-md">
-                            {pkg.name}
+                            {formatTitle(pkg.name)}
                         </h2>
                     </div>
                 </div>
@@ -111,7 +122,7 @@ export const PublicPackageDetailsModal = ({ isOpen, onClose, pkg }: Props) => {
                                                     {detail.categoryTypeName}
                                                 </span>
                                                 <h4 className="font-bold text-base sm:text-lg text-white leading-tight mt-0.5 drop-shadow-md">
-                                                    {detail.productName}
+                                                    {formatTitle(detail.productName)}
                                                 </h4>
                                             </div>
 

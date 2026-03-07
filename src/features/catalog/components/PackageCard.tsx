@@ -22,6 +22,16 @@ export const PackageCard = ({ pkg, onViewDetails }: Props) => {
         }
     };
 
+    // Función para limpiar el título eliminando lo que está antes del "|"
+    const formatTitle = (title: string) => {
+        if (!title) return "";
+        // Si el título contiene el símbolo "|", lo partimos en dos y nos quedamos con la segunda parte [1]
+        if (title.includes("|")) {
+            return title.split("|")[1].trim(); 
+        }
+        // Si no tiene el símbolo, devolvemos el título original tal cual
+        return title.trim();
+    };
 
     return (
         <div 
@@ -66,7 +76,7 @@ export const PackageCard = ({ pkg, onViewDetails }: Props) => {
                     
                     {/* Título también truncado a 1 línea por si es inmenso */}
                     <div className="mb-2">
-                        <h3 className="text-xl font-black text-white truncate">{pkg.name}</h3>
+                        <h3 className="text-xl font-black text-white truncate">{formatTitle(pkg.name)}</h3>
                     </div>
                     
                     {/* Vistazo de qué incluye (Altura fija para que no empuje el contenido) */}
