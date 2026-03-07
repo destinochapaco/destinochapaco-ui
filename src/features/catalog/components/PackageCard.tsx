@@ -92,8 +92,8 @@ export const PackageCard = ({ pkg, onViewDetails }: Props) => {
                             <div>
                                 <span className="text-xs uppercase font-bold text-gray-300 block mb-1">Precio por persona</span>
                                 <div className="flex items-end gap-1">
-                                    <span className="text-sm font-bold text-primary mb-1">Bs.</span>
-                                    <span className="text-4xl font-black text-primary leading-none">{pkg.pricePerPerson}</span>
+                                    <span className="text-sm font-bold text-[#eab003] mb-1">Bs.</span>
+                                    <span className="text-4xl font-black text-[#eab003] leading-none">{pkg.pricePerPerson}</span>
                                 </div>
                             </div>
                             
