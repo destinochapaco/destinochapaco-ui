@@ -47,7 +47,7 @@ export const PublicCatalogPage = () => {
         </div>
     );
     return (
-        <div className="min-h-screen bg-base-50 pb-20">
+        <div className="min-h-screen bg-slate-100 pb-20">
             {/* Header decorativo */}
             <header className="bg-primary text-primary-content pt-12 pb-24 px-4 text-center rounded-b-[3rem] shadow-sm relative overflow-hidden">
                 <div className="absolute top-[-50px] right-[-50px] opacity-10">

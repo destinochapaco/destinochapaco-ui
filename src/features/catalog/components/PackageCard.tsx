@@ -61,11 +61,12 @@ export const PackageCard = ({ pkg, onViewDetails }: Props) => {
                 {/* Cuerpo de la tarjeta. 
                     NOTA: Le añadimos bg-base-100/90 (semi-transparente) y backdrop-blur 
                     para asegurar que el texto se lea perfectamente sin importar tu imagen de fondo */}
+                {/* <div className="p-5 flex flex-col flex-grow bg-black/60 backdrop-blur-sm"> */}
                 <div className="p-5 flex flex-col flex-grow bg-base-100/90 backdrop-blur-sm">
                     
                     {/* Título también truncado a 1 línea por si es inmenso */}
                     <div className="mb-2">
-                        <h3 className="text-xl font-black text-base-content truncate">{pkg.name}</h3>
+                        <h3 className="text-xl font-black text-white truncate">{pkg.name}</h3>
                     </div>
                     
                     {/* Vistazo de qué incluye (Altura fija para que no empuje el contenido) */}
@@ -81,7 +82,7 @@ export const PackageCard = ({ pkg, onViewDetails }: Props) => {
                     </div>
 
                     {/* ✅ SOLUCIÓN: Descripción estricta de 1 sola línea con "..." */}
-                    <p className="text-sm text-base-content/70 truncate mb-4">
+                    <p className="text-sm text-gray-200 truncate mb-4">
                         {pkg.description || "Un paquete increíble pensado para ti. Haz clic en detalles para ver más."}
                     </p>
 
@@ -89,7 +90,7 @@ export const PackageCard = ({ pkg, onViewDetails }: Props) => {
                     <div className="mt-auto bg-primary/5 rounded-2xl p-4 border border-primary/10 backdrop-blur-md">
                         <div className="flex justify-between items-end">
                             <div>
-                                <span className="text-xs uppercase font-bold text-base-content/50 block mb-1">Precio por persona</span>
+                                <span className="text-xs uppercase font-bold text-gray-300 block mb-1">Precio por persona</span>
                                 <div className="flex items-end gap-1">
                                     <span className="text-sm font-bold text-primary mb-1">Bs.</span>
                                     <span className="text-4xl font-black text-primary leading-none">{pkg.pricePerPerson}</span>
@@ -105,7 +106,7 @@ export const PackageCard = ({ pkg, onViewDetails }: Props) => {
                                 
                                 {/* TEXTO DEL TOTAL (pequeño y tachado) */}
                                 {pkg.peopleCount > 1 && (
-                                    <div className="text-[11px] font-bold text-base-content/50 mt-1.5 decoration-primary/50">
+                                    <div className="text-[11px] font-bold text-gray-300 mt-1.5 decoration-primary/50">
                                         Total: Bs. {pkg.totalPrice}
                                     </div>
                                 )}
