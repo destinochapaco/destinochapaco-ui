@@ -18,36 +18,44 @@ export const PublicCatalogPage = () => {
         queryFn: () => getPublicCatalog(EMPRESA_ID),
     });
 
-    // 2. Estados
-    // Ahora es un array vacío por defecto (significa "mostrar todo")
+// 2. Estados
     const [activeFilters, setActiveFilters] = useState<string[]>([]);
+    const [peopleCountFilter, setPeopleCountFilter] = useState<number>(0); // 0 = Mostrar todos
     const [selectedPackage, setSelectedPackage] = useState<PublicPackage | null>(null);
 
-    // 3. Lógica de Filtrado EXACTO
+    // 3. Lógica de Filtrado COMPUESTO (Categorías EXACTAS + Personas)
     const filteredPackages = useMemo(() => {
-        // Si no hay filtros seleccionados, mostramos todo el catálogo
-        if (activeFilters.length === 0) return packages;
-        
-        return packages.filter(pkg => {
-            // Extraemos los códigos de categoría únicos de este paquete
-            const pkgCategoryCodes = Array.from(new Set(pkg.details.map(d => String(d.categoryTypeCode))));
-            
-            // REGLA 1: Deben tener exactamente la misma cantidad de categorías.
-            // Si buscas "Solo Inscripción" (1), y el paquete tiene "Inscripción + Bus" (2), lo descarta.
-            if (pkgCategoryCodes.length !== activeFilters.length) return false;
+        let result = packages;
 
-            // REGLA 2: Todas las categorías seleccionadas deben estar en el paquete.
-            return activeFilters.every(filterCode => pkgCategoryCodes.includes(filterCode));
-        });
-    }, [packages, activeFilters]);
+        // FILTRO 1: Por Cantidad de Personas
+        if (peopleCountFilter > 0) {
+            result = result.filter(pkg => pkg.peopleCount === peopleCountFilter);
+        }
 
-    // Función para encender/apagar un filtro
+        // FILTRO 2: Por Combinación Exacta de Categorías
+        if (activeFilters.length > 0) {
+            result = result.filter(pkg => {
+                const pkgCategoryCodes = Array.from(new Set(pkg.details.map(d => String(d.categoryTypeCode))));
+                // Regla exacta: Mismos tamaños y todos presentes
+                if (pkgCategoryCodes.length !== activeFilters.length) return false;
+                return activeFilters.every(filterCode => pkgCategoryCodes.includes(filterCode));
+            });
+        }
+
+        return result;
+    }, [packages, activeFilters, peopleCountFilter]);
+
+    // Función para encender/apagar un filtro de categoría
     const handleToggleFilter = (code: string) => {
         setActiveFilters(prev => 
-            prev.includes(code) 
-                ? prev.filter(c => c !== code) // Si ya estaba, lo quitamos
-                : [...prev, code] // Si no estaba, lo agregamos
+            prev.includes(code) ? prev.filter(c => c !== code) : [...prev, code]
         );
+    };
+
+    // Función rápida para limpiar TODOS los filtros a la vez (Botón del Empty State)
+    const handleClearAllFilters = () => {
+        setActiveFilters([]);
+        setPeopleCountFilter(0);
     };
 
     // Render de Estados de Carga / Error
@@ -130,9 +138,11 @@ export const PublicCatalogPage = () => {
                         packages={packages} 
                         activeFilters={activeFilters}
                         onFilterToggle={handleToggleFilter}
+                        peopleCount={peopleCountFilter}
+                        onPeopleCountChange={setPeopleCountFilter}
                     />
                 </div>
-
+                
                 {/* Grid de Paquetes o Mensaje de Vacío */}
                 {filteredPackages.length === 0 ? (
                     
@@ -148,7 +158,7 @@ export const PublicCatalogPage = () => {
                             No encontramos opciones con esta combinación exacta de servicios. Intenta desactivar algún filtro para ver más opciones disponibles.
                         </p>
                         <button 
-                            onClick={() => setActiveFilters([])} 
+                            onClick={handleClearAllFilters}
                             className="btn bg-[#ffc604] hover:bg-[#eab003] text-black border-none rounded-xl font-black shadow-md shadow-[#ffc604]/30 px-8 sm:px-10 h-12 mt-2"
                         >
                             Mostrar todos los paquetes
