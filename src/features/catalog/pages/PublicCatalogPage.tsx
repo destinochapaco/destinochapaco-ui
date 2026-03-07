@@ -1,6 +1,4 @@
-// src/features/catalog/pages/PublicCatalogPage.tsx
 import { useState, useMemo } from "react";
-import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { Map, AlertCircle, Loader2 } from "lucide-react";
 
@@ -9,22 +7,20 @@ import { PublicCatalogFilters } from "../components/PublicCatalogFilters";
 import { PackageCard } from "../components/PackageCard";
 import type { PublicPackage } from "../types";
 
-export const PublicCatalogPage = () => {
-    // 1. Capturamos el nombre o ID de la empresa desde la URL (ej: /mi-agencia/catalog)
-    const { empresaId } = useParams<{ empresaId: string }>();
+const EMPRESA_ID = import.meta.env.VITE_EMPRESA_ID;
 
-    // 2. Fetch de datos con React Query
+export const PublicCatalogPage = () => {
+    // 1. Fetch de datos con React Query usando la variable de entorno
     const { data: packages = [], isLoading, isError } = useQuery({
-        queryKey: ["public-catalog", empresaId],
-        queryFn: () => getPublicCatalog(empresaId!),
-        enabled: !!empresaId, // Solo llama si hay un empresaId en la URL
+        queryKey: ["public-catalog", EMPRESA_ID],
+        queryFn: () => getPublicCatalog(EMPRESA_ID),
     });
 
-    // 3. Estados
+    // 2. Estados
     const [categoryFilter, setCategoryFilter] = useState("ALL");
-    const [selectedPackage, setSelectedPackage] = useState<PublicPackage | null>(null); // Para el Modal futuro
+    const [selectedPackage, setSelectedPackage] = useState<PublicPackage | null>(null);
 
-    // 4. Lógica de Filtrado (Igual que en tu código original)
+    // 3. Lógica de Filtrado
     const filteredPackages = useMemo(() => {
         if (categoryFilter === "ALL") return packages;
         return packages.filter(pkg => {
@@ -45,10 +41,10 @@ export const PublicCatalogPage = () => {
         <div className="min-h-screen flex flex-col items-center justify-center gap-4 bg-base-50">
             <AlertCircle className="w-16 h-16 text-error" />
             <h2 className="text-xl font-bold">¡Uy! Algo salió mal.</h2>
-            <p className="text-base-content/60">No pudimos cargar el catálogo de {empresaId}. Intenta recargar la página.</p>
+            <p className="text-base-content/60">No pudimos cargar el catálogo. Por favor, intenta recargar la página.</p>
         </div>
     );
-
+    
     return (
         <div className="min-h-screen bg-base-50 pb-20">
             {/* Header decorativo */}

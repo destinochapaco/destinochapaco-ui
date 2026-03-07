@@ -5,19 +5,10 @@ export const AppRouter = () => {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Ruta principal dinámica que captura el ID o nombre de la empresa */}
-        <Route path="/:empresaId/catalog" element={<PublicCatalogPage />} />
-
-        {/* Si alguien entra a la raíz sin empresa, podemos mostrar un 404 o redirigir */}
-        <Route path="/" element={
-            <div className="flex items-center justify-center h-screen">
-                <h1 className="text-2xl font-bold text-gray-500">
-                    Por favor, ingresa a través del enlace de tu agencia de viajes.
-                </h1>
-            </div>
-        } />
+        {/* La ruta principal ahora carga directamente el catálogo */}
+        <Route path="/" element={<PublicCatalogPage />} />
         
-        {/* Cualquier otra ruta no definida (404) */}
+        {/* Cualquier otra ruta no definida redirige al inicio */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
