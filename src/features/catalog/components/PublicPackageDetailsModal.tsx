@@ -1,4 +1,4 @@
-import { X, MapPin, Map as MapIcon, Users, CheckCircle2, MessageCircle } from "lucide-react";
+import { X, MapPin, Map as MapIcon, CheckCircle2, MessageCircle } from "lucide-react";
 import type { PublicPackage } from "../types";
 
 interface Props {
@@ -146,7 +146,7 @@ export const PublicPackageDetailsModal = ({ isOpen, onClose, pkg }: Props) => {
                                                             href={detail.mapUrlLocation} 
                                                             target="_blank" 
                                                             rel="noopener noreferrer"
-                                                            className="text-info hover:text-info/80 block mt-1.5 font-bold transition-colors inline-flex items-center gap-1 drop-shadow-sm"
+                                                            className="text-info hover:text-info/80 mt-1.5 font-bold transition-colors inline-flex items-center gap-1 drop-shadow-sm"
                                                         >
                                                             Ver en mapa &rarr;
                                                         </a>
