@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { AlertCircle, Loader2, SearchX } from "lucide-react";
+import { AlertCircle, Loader2, MessageCircle, SearchX } from "lucide-react";
 
 import { getPublicCatalog } from "../services/catalogService";
 import { PublicCatalogFilters } from "../components/PublicCatalogFilters";
@@ -23,6 +23,10 @@ export const PublicCatalogPage = () => {
     const [peopleCountFilter, setPeopleCountFilter] = useState<number>(0);
     const [transportFilter, setTransportFilter] = useState<'all' | 'cama' | 'semicama'>('all'); // Nuevo estado
     const [selectedPackage, setSelectedPackage] = useState<PublicPackage | null>(null);
+
+    // NUEVO: Enlace para el botón flotante general
+    const generalWhatsappMessage = encodeURIComponent("¡Hola! Me gustaría recibir más información sobre los paquetes disponibles.");
+    const generalWhatsappLink = `https://wa.me/59162820177?text=${generalWhatsappMessage}`; // ¡Cambia las X por tu número!
 
     // 3. Lógica de Filtrado COMPUESTO
     const filteredPackages = useMemo(() => {
@@ -215,6 +219,28 @@ export const PublicCatalogPage = () => {
                 onClose={() => setSelectedPackage(null)} 
                 pkg={selectedPackage} 
             />
+
+{/* BOTÓN FLOTANTE DE WHATSAPP (Aparece solo si el modal está cerrado) */}
+            {!selectedPackage && (
+                <a
+                    href={generalWhatsappLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="fixed bottom-6 right-6 md:bottom-8 md:right-8 z-40 flex items-center justify-center w-14 h-14 md:w-16 md:h-16 bg-[#25D366] rounded-full shadow-xl shadow-[#25D366]/40 hover:bg-[#20b858] hover:scale-110 transition-all duration-300 group"
+                    aria-label="Contactar por WhatsApp"
+                >
+                    {/* Imagen del icono de WhatsApp (Tu archivo PNG) */}
+                    <img 
+                        src="/whatsapp-ico.png" 
+                        alt="WhatsApp" 
+                        className="w-8 h-8 md:w-10 md:h-10 object-contain drop-shadow-sm relative z-10" 
+                    />
+                    
+                    {/* Efecto de "Ping" animado detrás del botón para llamar la atención sutilmente */}
+                    <span className="absolute inset-0 rounded-full bg-[#25D366] animate-ping opacity-20 group-hover:hidden z-0"></span>
+                </a>
+            )}
+
         </div>
     );
 };

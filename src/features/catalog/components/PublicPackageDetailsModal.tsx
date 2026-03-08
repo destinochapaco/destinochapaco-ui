@@ -1,4 +1,4 @@
-import { X, MapPin, Map as MapIcon, CheckCircle2, MessageCircle, ArrowRight, ChevronLeft, QrCode } from "lucide-react";
+import { X, Map as MapIcon, CheckCircle2, MessageCircle, ArrowRight, ChevronLeft, QrCode } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import type { PublicPackage } from "../types";
 
