@@ -1,4 +1,4 @@
-import { X, Map as MapIcon, CheckCircle2, MessageCircle, ArrowRight, ChevronLeft, QrCode } from "lucide-react";
+import { X, Map as MapIcon, CheckCircle2, MessageCircle, ArrowRight, ChevronLeft, QrCode, MapPin } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import type { PublicPackage } from "../types";
 
@@ -197,6 +197,30 @@ export const PublicPackageDetailsModal = ({ isOpen, onClose, pkg }: Props) => {
                                                 <p className="text-xs sm:text-sm text-gray-300 mt-1.5 line-clamp-2 sm:line-clamp-3 drop-shadow-sm">
                                                     {detail.productDescription}
                                                 </p>
+                                                {/* UBICACIÓN: Diseño compacto para móvil */}
+                                                {detail.nameLocation && (
+                                                    <div className="mt-3 flex items-start gap-1.5 text-[10px] sm:text-xs text-gray-300 bg-white/5 border border-white/10 hover:bg-white/10 transition-colors p-2.5 sm:p-3 rounded-xl">
+                                                        <MapPin size={14} className="text-red-400 shrink-0 mt-0.5 drop-shadow-sm" />
+                                                        <div className="min-w-0 flex-1">
+                                                            <span className="font-bold block text-white drop-shadow-sm truncate">
+                                                                {detail.nameLocation}
+                                                            </span>
+                                                            <span className="opacity-80 block mt-0.5 drop-shadow-sm truncate">
+                                                                {detail.addressLocation}
+                                                            </span>
+                                                            {/* {detail.mapUrlLocation && (
+                                                                <a 
+                                                                    href={detail.mapUrlLocation} 
+                                                                    target="_blank" 
+                                                                    rel="noopener noreferrer"
+                                                                    className="text-blue-400 hover:text-blue-300 mt-1.5 font-bold transition-colors inline-flex items-center gap-1 drop-shadow-sm"
+                                                                >
+                                                                    Ver mapa &rarr;
+                                                                </a>
+                                                            )} */}
+                                                        </div>
+                                                    </div>
+                                                )}
                                             </div>
                                         </div>
                                     ))}
