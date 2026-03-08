@@ -9,7 +9,6 @@ interface Props {
     onFilterToggle: (categoryId: string) => void;
     peopleCount: number;
     onPeopleCountChange: (count: number) => void;
-    // Nuevas props para el filtro de Tipo de Bus
     transportType: 'all' | 'cama' | 'semicama';
     onTransportTypeChange: (type: 'all' | 'cama' | 'semicama') => void;
 }
@@ -38,8 +37,8 @@ const CATEGORY_MAP: Record<number, { label: string; icon: any; activeClass: stri
 const DEFAULT_CATEGORY_STYLE = { 
     label: "Extra", 
     icon: Briefcase, 
-    activeClass: "bg-slate-500 border-slate-500 text-white shadow-slate-500/30 md:scale-105",
-    inactiveClass: "bg-slate-50 border-slate-200 text-slate-400 hover:bg-slate-100 hover:border-slate-300"
+    activeClass: "bg-slate-500 border-slate-500 text-white shadow-slate-500/30",
+    inactiveClass: "bg-transparent border-[#170822] text-[#170822] hover:bg-[#170822]/5"
 };
 
 export const PublicCatalogFilters = ({ packages, activeFilters, onFilterToggle, peopleCount, onPeopleCountChange, transportType, onTransportTypeChange }: Props) => {
@@ -56,14 +55,14 @@ export const PublicCatalogFilters = ({ packages, activeFilters, onFilterToggle, 
         })).sort((a, b) => Number(a.code) - Number(b.code));
     }, [packages]);
 
-    // LÓGICA DE VISIBILIDAD: Se muestra si no hay filtros, o si está seleccionado "Transporte" (603)
     const showTransportFilter = activeFilters.length === 0 || activeFilters.includes("603");
 
     return (
-        <div className="flex flex-col gap-4 md:gap-5 w-full">
+        /* CONTENEDOR MAESTRO: Controla el ancho de TODO (máximo 620px en PC) y los centra */
+        <div className="flex flex-col gap-2 md:gap-4 w-full px-4 md:px-0 max-w-[100%] sm:max-w-[480px] md:max-w-[620px] mx-auto">
             
-            {/* 1. FILTRO DE CATEGORÍAS (Píldoras) */}
-            <div className="flex flex-nowrap md:flex-wrap overflow-x-auto md:overflow-visible justify-start md:justify-center gap-3 px-4 md:px-0 scrollbar-hide snap-x">
+            {/* 1. FILTRO DE CATEGORÍAS */}
+            <div className="flex w-full gap-2 md:gap-3">
                 {availableCategories.map((cat) => {
                     const isActive = activeFilters.includes(cat.code);
                     const Icon = cat.info.icon;
@@ -72,13 +71,16 @@ export const PublicCatalogFilters = ({ packages, activeFilters, onFilterToggle, 
                             key={cat.code}
                             onClick={() => onFilterToggle(cat.code)}
                             className={`
-                                flex items-center gap-2 border-2 transition-all duration-300 shadow-sm
-                                shrink-0 snap-start px-4 py-2.5 rounded-xl md:px-8 md:py-4 md:rounded-2xl
+                                flex-1 flex items-center justify-center gap-1.5 md:gap-2 border-2 transition-all duration-300 shadow-sm
+                                h-12 md:h-14 rounded-xl md:rounded-2xl
                                 ${isActive ? cat.info.activeClass : cat.info.inactiveClass}
                             `}
                         >
-                            <Icon className="w-5 h-5 md:w-6 md:h-6" strokeWidth={2.5} />
-                            <span className="font-bold text-sm md:text-base tracking-wide">
+                            {/* Icono oculto en móviles (hidden sm:block) */}
+                            <Icon className="hidden sm:block w-4 h-4 md:w-5 md:h-5" strokeWidth={2.5} />
+                            
+                            {/* Texto más pequeño en móvil para que encaje bien, truncate por si acaso */}
+                            <span className="font-bold text-[11px] sm:text-sm md:text-base tracking-tight md:tracking-wide truncate px-1">
                                 {cat.info.label}
                             </span>
                         </button>
@@ -87,41 +89,40 @@ export const PublicCatalogFilters = ({ packages, activeFilters, onFilterToggle, 
             </div>
 
             {/* 2. FILTRO DE PERSONAS */}
-            <div className="w-full max-w-sm md:max-w-[620px] mx-auto flex items-center justify-between bg-purple-50 px-4 py-2.5 md:px-8 md:py-4 rounded-xl md:rounded-2xl border-2 border-[#170822] shadow-sm mt-0">
-                <div className="flex flex-col md:flex-row md:items-baseline md:gap-2 text-left">
-                    <span className="text-sm md:text-base font-black text-[#170822] tracking-wide">
+            <div className="w-full h-12 md:h-14 flex items-center justify-between bg-purple-50 px-3 md:px-6 rounded-xl md:rounded-2xl border-2 border-[#170822] shadow-sm">
+                <div className="flex items-center gap-1.5 md:gap-2 text-left">
+                    <span className="text-[11px] sm:text-sm md:text-base font-black text-[#170822] tracking-wide">
                         Cantidad de personas
                     </span>
                     <span className="hidden md:inline-block text-sm font-semibold text-[#170822]/60">
                         {peopleCount === 0 ? "(Todos)" : `(Para ${peopleCount} pax)`}
                     </span>
                 </div>
-                <div className="flex items-center gap-3 md:gap-4">
-                    <button onClick={() => onPeopleCountChange(Math.max(0, peopleCount - 1))} disabled={peopleCount === 0} className="w-7 h-7 md:w-8 md:h-8 flex items-center justify-center rounded-full border-2 border-[#170822]/20 text-[#170822] hover:border-[#170822] hover:bg-[#170822] hover:text-white disabled:opacity-30 disabled:hover:border-[#170822]/20 disabled:hover:bg-transparent transition-all duration-300 shrink-0">
-                        <Minus className="w-3.5 h-3.5 md:w-4 md:h-4" strokeWidth={3} />
+                <div className="flex items-center gap-2 md:gap-4">
+                    <button onClick={() => onPeopleCountChange(Math.max(0, peopleCount - 1))} disabled={peopleCount === 0} className="w-6 h-6 md:w-8 md:h-8 flex items-center justify-center rounded-full border-2 border-[#170822]/20 text-[#170822] hover:border-[#170822] hover:bg-[#170822] hover:text-white disabled:opacity-30 disabled:hover:border-[#170822]/20 disabled:hover:bg-transparent transition-all duration-300 shrink-0">
+                        <Minus className="w-3 h-3 md:w-4 md:h-4" strokeWidth={3} />
                     </button>
-                    <span className="w-4 md:w-5 text-center font-black text-lg md:text-[22px] text-[#170822] tabular-nums">
+                    <span className="w-4 md:w-5 text-center font-black text-sm sm:text-lg md:text-[22px] text-[#170822] tabular-nums">
                         {peopleCount}
                     </span>
-                    <button onClick={() => onPeopleCountChange(Math.min(10, peopleCount + 1))} disabled={peopleCount === 10} className="w-7 h-7 md:w-8 md:h-8 flex items-center justify-center rounded-full border-2 border-[#170822]/20 text-[#170822] hover:border-[#170822] hover:bg-[#170822] hover:text-white disabled:opacity-30 disabled:hover:border-[#170822]/20 disabled:hover:bg-transparent transition-all duration-300 shrink-0">
-                        <Plus className="w-3.5 h-3.5 md:w-4 md:h-4" strokeWidth={3} />
+                    <button onClick={() => onPeopleCountChange(Math.min(10, peopleCount + 1))} disabled={peopleCount === 10} className="w-6 h-6 md:w-8 md:h-8 flex items-center justify-center rounded-full border-2 border-[#170822]/20 text-[#170822] hover:border-[#170822] hover:bg-[#170822] hover:text-white disabled:opacity-30 disabled:hover:border-[#170822]/20 disabled:hover:bg-transparent transition-all duration-300 shrink-0">
+                        <Plus className="w-3 h-3 md:w-4 md:h-4" strokeWidth={3} />
                     </button>
                 </div>
             </div>
 
-            {/* 3. FILTRO TIPO DE BUS (Aparece y desaparece mágicamente) */}
+            {/* 3. FILTRO TIPO DE BUS */}
             {showTransportFilter && (
-                <div className="w-full max-w-sm md:max-w-[620px] mx-auto flex items-center gap-3 px-4 md:px-0">
+                <div className="w-full flex items-center gap-2 md:gap-3">
                     
                     {/* Botón Bus Semi-Cama */}
                     <button
-                        // Si ya está activo, al darle clic se desmarca (vuelve a 'all')
                         onClick={() => onTransportTypeChange(transportType === 'semicama' ? 'all' : 'semicama')}
                         className={`
-                            flex-1 py-2.5 md:py-3.5 rounded-xl md:rounded-2xl border-2 font-bold text-sm md:text-base transition-all duration-300
+                            flex-1 flex items-center justify-center h-12 md:h-14 rounded-xl md:rounded-2xl border-2 font-bold text-[11px] sm:text-sm md:text-base transition-all duration-300
                             ${transportType === 'semicama' 
-                                ? 'bg-[#170822] border-[#170822] text-white shadow-md shadow-[#170822]/20' 
-                                : 'bg-transparent border-[#170822] text-[#170822] hover:bg-[#170822]/5'
+                                ? 'bg-orange-500 border-orange-500 text-white shadow-md shadow-orange-500/30' 
+                                : 'bg-transparent border-orange-400 text-orange-600 hover:bg-orange-50'
                             }
                         `}
                     >
@@ -132,10 +133,10 @@ export const PublicCatalogFilters = ({ packages, activeFilters, onFilterToggle, 
                     <button
                         onClick={() => onTransportTypeChange(transportType === 'cama' ? 'all' : 'cama')}
                         className={`
-                            flex-1 py-2.5 md:py-3.5 rounded-xl md:rounded-2xl border-2 font-bold text-sm md:text-base transition-all duration-300
+                            flex-1 flex items-center justify-center h-12 md:h-14 rounded-xl md:rounded-2xl border-2 font-bold text-[11px] sm:text-sm md:text-base transition-all duration-300
                             ${transportType === 'cama' 
-                                ? 'bg-[#170822] border-[#170822] text-white shadow-md shadow-[#170822]/20' 
-                                : 'bg-transparent border-[#170822] text-[#170822] hover:bg-[#170822]/5'
+                                ? 'bg-orange-500 border-orange-500 text-white shadow-md shadow-orange-500/30' 
+                                : 'bg-transparent border-orange-400 text-orange-600 hover:bg-orange-50'
                             }
                         `}
                     >
