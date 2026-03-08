@@ -129,12 +129,23 @@ export const PackageCard = ({ pkg, onViewDetails }: Props) => {
                     {/* Botón de Acción */}
                     <button 
                         onClick={() => onViewDetails(pkg)}
+                        disabled={!pkg.hasStock}
                         className="mt-4 w-full btn bg-[#ffc604] hover:bg-[#eab003] text-black border-none rounded-xl font-black shadow-md shadow-[#ffc604]/40 transition-colors"
                     >
                         <ArrowBigRightDash size={18} /> VER DETALLES
                     </button>
                 </div>
             </div>
+            {!pkg.hasStock && (
+                <div className="absolute inset-0 z-40 flex items-center justify-center bg-black/65 backdrop-blur-[1px] rounded-3xl">
+                    {/* Sello Diagonal */}
+                    <div className="transform -rotate-12 border-4 sm:border-8 border-red-600 px-6 sm:px-10 py-2 sm:py-4 rounded-2xl sm:rounded-3xl bg-black/50 shadow-[0_0_40px_rgba(220,38,38,0.5)]">
+                        <span className="text-4xl sm:text-5xl font-black text-red-500 tracking-[0.2em] sm:tracking-[0.3em] uppercase drop-shadow-xl">
+                            Agotado
+                        </span>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

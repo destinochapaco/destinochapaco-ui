@@ -21,5 +21,6 @@ export interface PublicPackage {
     totalPrice: number;
     pricePerPerson: number;
     isLowStock: boolean;
+    hasStock: boolean;
     details: PublicPackageDetail[];
 }

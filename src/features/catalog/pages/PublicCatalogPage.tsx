@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { AlertCircle, Loader2, MessageCircle, SearchX } from "lucide-react";
+import { AlertCircle, Loader2, SearchX } from "lucide-react";
 
 import { getPublicCatalog } from "../services/catalogService";
 import { PublicCatalogFilters } from "../components/PublicCatalogFilters";
