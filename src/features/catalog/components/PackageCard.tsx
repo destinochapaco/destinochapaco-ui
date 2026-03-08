@@ -1,4 +1,4 @@
-import { Info, Users, MapPin, Sparkles } from "lucide-react";
+import { Users, MapPin, Sparkles, ArrowBigRightDash } from "lucide-react";
 import type { PublicPackage } from "../types";
 
 interface Props {
@@ -52,8 +52,10 @@ export const PackageCard = ({ pkg, onViewDetails }: Props) => {
                 
                 {/* Badge de Escasez */}
                 {pkg.isLowStock && (
-                    <div className="absolute top-4 right-0 bg-warning text-warning-content text-xs font-bold px-3 py-1 rounded-l-full shadow-md z-10 flex items-center gap-1">
-                        <Sparkles size={12} /> ¡Últimos cupos!
+                    <div className="absolute top-0 right-0 bg-red-600 text-white text-[11px] font-black px-4 py-2 rounded-tr-3xl rounded-bl-2xl shadow-xl z-10 flex items-center gap-1.5 uppercase tracking-wider animate-pulse-slow">
+                        {/* Icono un poco más grande y blanco */}
+                        <Sparkles size={14} className="shrink-0 text-white/90" /> 
+                        ¡Últimos cupos!
                     </div>
                 )}
 
@@ -129,7 +131,7 @@ export const PackageCard = ({ pkg, onViewDetails }: Props) => {
                         onClick={() => onViewDetails(pkg)}
                         className="mt-4 w-full btn bg-[#ffc604] hover:bg-[#eab003] text-black border-none rounded-xl font-black shadow-md shadow-[#ffc604]/40 transition-colors"
                     >
-                        <Info size={18} /> Ver detalles del paquete
+                        <ArrowBigRightDash size={18} /> VER DETALLES
                     </button>
                 </div>
             </div>
