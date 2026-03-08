@@ -18,12 +18,13 @@ export const PublicCatalogPage = () => {
         queryFn: () => getPublicCatalog(EMPRESA_ID),
     });
 
-// 2. Estados
+    // 2. Estados
     const [activeFilters, setActiveFilters] = useState<string[]>([]);
-    const [peopleCountFilter, setPeopleCountFilter] = useState<number>(0); // 0 = Mostrar todos
+    const [peopleCountFilter, setPeopleCountFilter] = useState<number>(0);
+    const [transportFilter, setTransportFilter] = useState<'all' | 'cama' | 'semicama'>('all'); // Nuevo estado
     const [selectedPackage, setSelectedPackage] = useState<PublicPackage | null>(null);
 
-    // 3. Lógica de Filtrado COMPUESTO (Categorías EXACTAS + Personas)
+    // 3. Lógica de Filtrado COMPUESTO
     const filteredPackages = useMemo(() => {
         let result = packages;
 
@@ -36,26 +37,50 @@ export const PublicCatalogPage = () => {
         if (activeFilters.length > 0) {
             result = result.filter(pkg => {
                 const pkgCategoryCodes = Array.from(new Set(pkg.details.map(d => String(d.categoryTypeCode))));
-                // Regla exacta: Mismos tamaños y todos presentes
                 if (pkgCategoryCodes.length !== activeFilters.length) return false;
                 return activeFilters.every(filterCode => pkgCategoryCodes.includes(filterCode));
             });
         }
 
+        // FILTRO 3: Por Tipo de Transporte (Bus Cama / Semicama)
+        // Verificamos primero si el filtro debería aplicarse según las reglas de visibilidad
+        const isTransportVisible = activeFilters.length === 0 || activeFilters.includes("603");
+        if (isTransportVisible && transportFilter !== 'all') {
+            result = result.filter(pkg => {
+                // Buscamos dentro de los detalles del paquete si hay ALGÚN transporte que coincida
+                return pkg.details.some(d => {
+                    // Si no es un transporte (603), lo ignoramos
+                    if (String(d.categoryTypeCode) !== "603") return false;
+                    
+                    const productName = d.productName.toLowerCase();
+                    
+                    if (transportFilter === 'semicama') {
+                        // Buscamos variaciones de escritura de semicama
+                        return productName.includes('semicama') || productName.includes('semi-cama') || productName.includes('semi cama');
+                    } else if (transportFilter === 'cama') {
+                        // TRUCO: Tiene que decir "cama" pero NO debe decir "semi", así no se cruzan.
+                        return productName.includes('cama') && !productName.includes('semi');
+                    }
+                    return false;
+                });
+            });
+        }
+
         return result;
-    }, [packages, activeFilters, peopleCountFilter]);
+    }, [packages, activeFilters, peopleCountFilter, transportFilter]);
+
+    // Función rápida para limpiar TODOS los filtros a la vez (Botón del Empty State)
+    const handleClearAllFilters = () => {
+        setActiveFilters([]);
+        setPeopleCountFilter(0);
+        setTransportFilter('all'); // Limpiamos el de transporte también
+    };
 
     // Función para encender/apagar un filtro de categoría
     const handleToggleFilter = (code: string) => {
         setActiveFilters(prev => 
             prev.includes(code) ? prev.filter(c => c !== code) : [...prev, code]
         );
-    };
-
-    // Función rápida para limpiar TODOS los filtros a la vez (Botón del Empty State)
-    const handleClearAllFilters = () => {
-        setActiveFilters([]);
-        setPeopleCountFilter(0);
     };
 
     // Render de Estados de Carga / Error
@@ -140,6 +165,8 @@ export const PublicCatalogPage = () => {
                         onFilterToggle={handleToggleFilter}
                         peopleCount={peopleCountFilter}
                         onPeopleCountChange={setPeopleCountFilter}
+                        transportType={transportFilter}
+                        onTransportTypeChange={setTransportFilter}
                     />
                 </div>
                 
