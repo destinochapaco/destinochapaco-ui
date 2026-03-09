@@ -196,51 +196,45 @@ export const PublicCatalogPage = () => {
                         </button>
                     </div>
                 ) : (
-                    /* RENDERIZADO DE TARJETAS Y BANNER SOCIAL */
-                    <div className="flex flex-col w-full">
-                        
-                        {/* PRIMERA TANDA: Siempre muestra hasta los primeros 4 paquetes */}
-                        <div className="flex flex-wrap justify-center gap-6 md:gap-8 w-full">
-                            {filteredPackages.slice(0, 4).map((pkg) => (
+                    /* RENDERIZADO DE TARJETAS Y BANNER SOCIAL (Grilla Unificada) */
+                    <div className="flex flex-wrap justify-center gap-6 md:gap-8 w-full">
+                        {filteredPackages.map((pkg, index) => (
+                            <div key={pkg.slug} className="contents">
+                                
+                                {/* 1. La Tarjeta Normal */}
                                 <PackageCard 
-                                    key={pkg.slug} 
                                     pkg={pkg} 
-                                    onViewDetails={(pkg) => setSelectedPackage(pkg)} 
+                                    onViewDetails={(p) => setSelectedPackage(p)} 
                                 />
-                            ))}
-                        </div>
 
-                        {/* BANNER INTERMEDIO (Móvil): Solo si hay más de 4 paquetes */}
-                        {filteredPackages.length > 4 && (
-                            <div className="w-full mt-8 md:hidden">
-                                <SocialBanner isInline={true} />
+                                {/* 2. BANNER INTERMEDIO (Inyectado solo en móvil) */}
+                                {/* Al tener md:hidden, en PC no ocupa espacio ni rompe las 3 columnas.
+                                    Al tener w-full, en Móvil ocupa toda la pantalla y separa los paquetes. */}
+                                {index === 3 && filteredPackages.length > 4 && (
+                                    <div className="w-full md:hidden my-2">
+                                        <SocialBanner isInline={true} />
+                                    </div>
+                                )}
+                                
                             </div>
-                        )}
-
-                        {/* SEGUNDA TANDA: Muestra el resto de los paquetes (del 5 en adelante) */}
-                        {filteredPackages.length > 4 && (
-                            <div className="flex flex-wrap justify-center gap-6 md:gap-8 w-full mt-6 md:mt-8">
-                                {filteredPackages.slice(4).map((pkg) => (
-                                    <PackageCard 
-                                        key={pkg.slug} 
-                                        pkg={pkg} 
-                                        onViewDetails={(pkg) => setSelectedPackage(pkg)} 
-                                    />
-                                ))}
-                            </div>
-                        )}
-                        
+                        ))}
                     </div>
                 )}
             </main>
 
-            {/* --- NUEVO: FOOTER BANNER --- */}
+            {/* --- FOOTER BANNER --- */}
+            {/* Se mueve fuera del <main> para que abarque el 100% de la pantalla y toque el piso. 
+                Reglas:
+                - En PC (md:block): Siempre se muestra aquí al final.
+                - En Celular: Se oculta si hay más de 4 paquetes (porque ya se vio el intermedio). 
+                  Se muestra solo si hay 4 o menos.
+            */}
             {filteredPackages.length > 0 && (
                 <div className={`w-full mt-auto ${filteredPackages.length > 4 ? 'hidden md:block' : 'block'}`}>
                     <SocialBanner isInline={false} />
                 </div>
             )}
-            
+
             {/* MODAL DE DETALLES */}
             <PublicPackageDetailsModal 
                 isOpen={!!selectedPackage} 
