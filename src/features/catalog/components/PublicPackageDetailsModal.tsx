@@ -249,7 +249,7 @@ export const PublicPackageDetailsModal = ({ isOpen, onClose, pkg }: Props) => {
                                     Utiliza el código QR para realizar el pago de tu paquete. Asegúrate de guardar el comprobante.
                                 </p>
 
-                                <div className="bg-white p-3 rounded-2xl shadow-inner w-48 h-48 sm:w-56 sm:h-56">
+                                <div className="bg-white shadow-inner w-48 h-48 sm:w-56 sm:h-56">
                                     {pkg.imageQrUrl ? (
                                         <img src={pkg.imageQrUrl} alt="QR de Reserva" className="w-full h-full object-contain" />
                                     ) : (
