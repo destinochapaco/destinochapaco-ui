@@ -8,6 +8,7 @@ import { PackageCard } from "../components/PackageCard";
 import type { PublicPackage } from "../types";
 
 import { PublicPackageDetailsModal } from "../components/PublicPackageDetailsModal";
+import { SocialBanner } from "../components/SocialBanner";
 
 const EMPRESA_ID = import.meta.env.VITE_EMPRESA_ID;
 
@@ -104,7 +105,7 @@ export const PublicCatalogPage = () => {
     );
     
     return (
-        <div className="min-h-screen bg-slate-100 pb-20">
+        <div className="min-h-screen bg-slate-100 flex flex-col">
             {/* HEADER */}
             <header className="relative w-full min-h-[280px] sm:min-h-[360px] flex flex-col px-4 sm:px-8 py-6 sm:py-8 overflow-hidden shadow-xl rounded-b-[2rem] sm:rounded-b-[3.5rem] mb-8">
                 
@@ -159,8 +160,7 @@ export const PublicCatalogPage = () => {
                     
                 </div>
             </header>
-
-            <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 -mt-12 relative z-20">
+            <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 -mt-12 relative z-20 flex-1 w-full pb-12">
                 {/* Contenedor de Filtros */}
                 <div className="bg-transparent mb-8">
                     <PublicCatalogFilters 
@@ -195,24 +195,52 @@ export const PublicCatalogPage = () => {
                             Mostrar todos los paquetes
                         </button>
                     </div>
-
                 ) : (
-                    /* CONTENEDOR FLEX DE LAS TARJETAS */
-                    <div className="flex flex-wrap justify-center gap-6 md:gap-8">
-                        {filteredPackages.map((pkg) => (
-                            <PackageCard 
-                                key={pkg.slug} 
-                                pkg={pkg} 
-                                onViewDetails={(pkg) => {
-                                    setSelectedPackage(pkg); 
-                                }} 
-                            />
-                        ))}
-                    </div>
+                    /* RENDERIZADO DE TARJETAS Y BANNER SOCIAL */
+                    <div className="flex flex-col w-full">
+                        
+                        {/* PRIMERA TANDA: Siempre muestra hasta los primeros 4 paquetes */}
+                        <div className="flex flex-wrap justify-center gap-6 md:gap-8 w-full">
+                            {filteredPackages.slice(0, 4).map((pkg) => (
+                                <PackageCard 
+                                    key={pkg.slug} 
+                                    pkg={pkg} 
+                                    onViewDetails={(pkg) => setSelectedPackage(pkg)} 
+                                />
+                            ))}
+                        </div>
 
+                        {/* BANNER INTERMEDIO (Móvil): Solo si hay más de 4 paquetes */}
+                        {filteredPackages.length > 4 && (
+                            <div className="w-full mt-8 md:hidden">
+                                <SocialBanner isInline={true} />
+                            </div>
+                        )}
+
+                        {/* SEGUNDA TANDA: Muestra el resto de los paquetes (del 5 en adelante) */}
+                        {filteredPackages.length > 4 && (
+                            <div className="flex flex-wrap justify-center gap-6 md:gap-8 w-full mt-6 md:mt-8">
+                                {filteredPackages.slice(4).map((pkg) => (
+                                    <PackageCard 
+                                        key={pkg.slug} 
+                                        pkg={pkg} 
+                                        onViewDetails={(pkg) => setSelectedPackage(pkg)} 
+                                    />
+                                ))}
+                            </div>
+                        )}
+                        
+                    </div>
                 )}
             </main>
 
+            {/* --- NUEVO: FOOTER BANNER --- */}
+            {filteredPackages.length > 0 && (
+                <div className={`w-full mt-auto ${filteredPackages.length > 4 ? 'hidden md:block' : 'block'}`}>
+                    <SocialBanner isInline={false} />
+                </div>
+            )}
+            
             {/* MODAL DE DETALLES */}
             <PublicPackageDetailsModal 
                 isOpen={!!selectedPackage} 
@@ -220,7 +248,7 @@ export const PublicCatalogPage = () => {
                 pkg={selectedPackage} 
             />
 
-{/* BOTÓN FLOTANTE DE WHATSAPP (Aparece solo si el modal está cerrado) */}
+            {/* BOTÓN FLOTANTE DE WHATSAPP (Aparece solo si el modal está cerrado) */}
             {!selectedPackage && (
                 <a
                     href={generalWhatsappLink}
