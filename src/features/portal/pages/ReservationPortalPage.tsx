@@ -179,14 +179,15 @@ export const ReservationPortalPage = () => {
                         <User className="text-purple-600" size={24} /> Clientes y Pagos
                     </h2>
                     
-                    {clients.map((client: any, idx: number) => {
+{clients.map((client: any, idx: number) => {
                         const isFullyPaid = (client?.pendingBalance || 0) <= 0;
                         const agreedPrice = client?.agreedPrice || 1;
                         const progressPercentage = Math.min(100, ((client?.totalPaid || 0) / agreedPrice) * 100);
 
                         return (
                             <div key={idx} className="bg-white rounded-[1.5rem] shadow-md hover:shadow-lg transition-shadow duration-300 border border-[#170822] overflow-hidden">
-                                {/* Encabezado do Card de Cliente */}
+                                
+                                {/* 1. ENCABEZADO PRINCIPAL (Mantenemos tu diseño intacto) */}
                                 <div className="p-4 sm:p-6 border-b border-slate-50 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                                     <div className="w-full sm:w-auto">
                                         <div className="flex items-center gap-2 mb-1.5">
@@ -203,7 +204,6 @@ export const ReservationPortalPage = () => {
                                         <p className="text-slate-500 text-xs sm:text-sm mt-0.5 font-medium">CI: {client?.identityCard || 'S/N'}</p>
                                     </div>
                                     
-                                    {/* Design Responsivo para Saldo */}
                                     <div className={`w-full sm:w-auto p-3 sm:p-3.5 rounded-xl flex sm:flex-col items-center sm:items-end justify-between sm:justify-center border sm:border-0 ${isFullyPaid ? 'bg-emerald-50/50 border-emerald-100' : 'bg-red-50/50 border-red-100'}`}>
                                         <p className="text-[10px] sm:text-[11px] text-slate-500 uppercase font-bold sm:mb-0.5">Saldo Pendiente</p>
                                         <p className={`text-lg sm:text-xl font-black tracking-tight ${isFullyPaid ? 'text-emerald-600' : 'text-red-600'}`}>
@@ -212,7 +212,71 @@ export const ReservationPortalPage = () => {
                                     </div>
                                 </div>
 
-                                {/* Barra de progresso */}
+                                {/* 2. NUEVO: FICHA TÉCNICA DEL PASAJERO (Acordeón) */}
+                                <details className="group border-b border-slate-100">
+                                    <summary className="flex justify-between items-center font-bold cursor-pointer list-none px-4 sm:px-6 py-3.5 sm:py-4 text-slate-600 hover:text-slate-800 hover:bg-slate-50 transition-colors text-xs sm:text-sm">
+                                        <span className="flex items-center gap-2"><User size={16} className="text-slate-400 group-hover:text-purple-500" /> Información del cliente</span>
+                                        <span className="transition-transform duration-300 group-open:rotate-180 text-slate-400"><ChevronDown size={18} /></span>
+                                    </summary>
+                                    <div className="px-4 sm:px-6 pb-4 sm:pb-5 pt-1">
+                                        
+                                        {/* Cuadrícula de Datos */}
+                                        <div className="bg-slate-50 p-4 rounded-xl border border-slate-100 grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4 text-xs">
+                                            <div>
+                                                <span className="block text-[9px] sm:text-[10px] uppercase font-bold text-slate-400 mb-0.5">Teléfono</span>
+                                                <span className="font-semibold text-slate-700">{client?.phoneNumber || 'S/N'}</span>
+                                            </div>
+                                            <div>
+                                                <span className="block text-[9px] sm:text-[10px] uppercase font-bold text-slate-400 mb-0.5">Nacimiento</span>
+                                                <span className="font-semibold text-slate-700">{client?.birthDate ? new Date(client.birthDate).toLocaleDateString() : 'S/N'}</span>
+                                            </div>
+                                            <div>
+                                                <span className="block text-[9px] sm:text-[10px] uppercase font-bold text-slate-400 mb-0.5">Ciudad</span>
+                                                <span className="font-semibold text-slate-700">{client?.city || 'S/N'}</span>
+                                            </div>
+                                            
+                                            {client?.university && (
+                                                <div className="col-span-2 sm:col-span-1">
+                                                    <span className="block text-[9px] sm:text-[10px] uppercase font-bold text-slate-400 mb-0.5">Universidad</span>
+                                                    <span className="font-semibold text-slate-700 line-clamp-1" title={client.university}>{client.university}</span>
+                                                </div>
+                                            )}
+                                            
+                                            {client?.faculty && (
+                                                <div className="col-span-2 sm:col-span-1">
+                                                    <span className="block text-[9px] sm:text-[10px] uppercase font-bold text-slate-400 mb-0.5">Facultad</span>
+                                                    <span className="font-semibold text-slate-700 line-clamp-1" title={client.faculty}>{client.faculty}</span>
+                                                </div>
+                                            )}
+                                            
+                                            {client?.career && (
+                                                <div className="col-span-2 sm:col-span-1">
+                                                    <span className="block text-[9px] sm:text-[10px] uppercase font-bold text-slate-400 mb-0.5">Carrera</span>
+                                                    <span className="font-semibold text-slate-700 line-clamp-1" title={client.career}>{client.career}</span>
+                                                </div>
+                                            )}
+
+                                            {/* Validación: Mostrar Grado SOLO si no es Profesional */}
+                                            {client?.clientTypeName?.toLowerCase() !== 'profesional' && client?.grade && (
+                                                <div>
+                                                    <span className="block text-[9px] sm:text-[10px] uppercase font-bold text-slate-400 mb-0.5">Semestre / Año</span>
+                                                    <span className="font-semibold text-slate-700">{client.grade}</span>
+                                                </div>
+                                            )}
+                                        </div>
+                                        
+                                        {/* Alerta Visual de Verificación */}
+                                        <div className="mt-3 flex items-start gap-2 bg-amber-50 p-3 rounded-xl border border-amber-100/50">
+                                            <AlertCircle size={16} className="text-amber-500 shrink-0 mt-0.5" />
+                                            <p className="text-[10px] sm:text-xs text-amber-700 leading-tight font-medium">
+                                                Verifica que tu información sea correcta. Si encuentras algún error, notifica a nuestro equipo de soporte para que actualicemos tu perfil.
+                                            </p>
+                                        </div>
+
+                                    </div>
+                                </details>
+
+                                {/* 3. BARRA DE PROGRESO FINANCIERO */}
                                 <div className="px-4 sm:px-6 py-4 bg-slate-50/50">
                                     <div className="flex justify-between text-[11px] sm:text-xs font-bold text-slate-500 mb-2">
                                         <span>Abonado: Bs. {client?.totalPaid || 0}</span>
@@ -226,7 +290,7 @@ export const ReservationPortalPage = () => {
                                     </div>
                                 </div>
 
-                                {/* Histórico de Pagamentos */}
+                                {/* 4. HISTORIAL DE PAGOS (Acordeón) */}
                                 {client?.payments && client.payments.length > 0 && (
                                     <details className="group border-t border-slate-100">
                                         <summary className="flex justify-between items-center font-bold cursor-pointer list-none px-4 sm:px-6 py-3.5 sm:py-4 text-slate-600 hover:text-slate-800 hover:bg-slate-50 transition-colors text-xs sm:text-sm">

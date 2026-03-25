@@ -6,12 +6,27 @@ export interface PortalPaymentResponse {
 }
 
 export interface PortalClientResponse {
+    // Datos personales
     fullName: string;
+    phoneNumber: string | null;
     identityCard: string;
     clientTypeName: string;
+    birthDate: string | null; // LocalDateTime de Java llega como un string ISO (ej: "2000-05-20T00:00:00")
+    grade: string | null;
+    city: string | null;
+
+    // Datos académicos
+    university: string | null;
+    faculty: string | null;
+    career: string | null;
+    studyAreaTypeName: string | null;
+
+    // Finanzas del cliente
     agreedPrice: number;
     totalPaid: number;
     pendingBalance: number;
+
+    // Historial de Pagos
     payments: PortalPaymentResponse[];
 }
 
