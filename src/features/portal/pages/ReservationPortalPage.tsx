@@ -365,9 +365,8 @@ export const ReservationPortalPage = () => {
                         <div className="absolute top-0 right-0 w-32 h-32 bg-purple-600 rounded-full blur-3xl opacity-20 -mr-10 -mt-10 pointer-events-none"></div>
                         <p className="text-purple-200 text-sm font-bold uppercase tracking-wider mb-1">Precio Total Paquete</p>
                         <p className="text-3xl font-black text-[#ffc604] flex items-baseline gap-1">
-                            <span className="text-lg">Bs.</span> {pkgInfo?.totalPrice || 0}
+                            <span className="text-lg">Bs.</span> {currentReservation?.totalPrice || 0}
                         </p>
-                        <p className="text-xs text-purple-300 mt-2">Bs. {pkgInfo?.pricePerPerson || 0} por persona</p>
                     </div>
                 </div>
 

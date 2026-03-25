@@ -43,14 +43,13 @@ export interface PortalProductResponse {
 export interface PortalPackageResponse {
     name: string;
     imageUrl: string | null;
-    totalPrice: number;
-    pricePerPerson: number;
 }
 
 export interface PortalReservationResponse {
     reservationCode: string;
     reservationDate: string;
     statusName: string;
+    totalPrice: number;
     packageInfo: PortalPackageResponse;
     products: PortalProductResponse[];
     clients: PortalClientResponse[];
